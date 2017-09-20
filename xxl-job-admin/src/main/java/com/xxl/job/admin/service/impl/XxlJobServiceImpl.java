@@ -264,7 +264,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	@Override
 	public ReturnT<String> triggerJob(int id) {
         XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
-        if (xxlJobInfo == null) {
+         if (xxlJobInfo == null) {
         	return new ReturnT<String>(ReturnT.FAIL_CODE, "任务ID非法");
 		}
 

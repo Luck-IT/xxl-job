@@ -141,7 +141,8 @@ public class XxlJobTrigger {
         triggerMsgSb.append("<br>路由策略：").append(executorRouteStrategyEnum.getTitle());
 
         // 3、trigger-valid
-        if (triggerResult.getCode()==ReturnT.SUCCESS_CODE && CollectionUtils.isEmpty(addressList)) {
+        
+        if (triggerResult.getCode()==ReturnT.SUCCESS_CODE && (jobInfo.getGlueType().equals("BEAN_ClASS") ? true : CollectionUtils.isEmpty(addressList))) {
             triggerResult.setCode(ReturnT.FAIL_CODE);
             triggerMsgSb.append("<br>----------------------<br>").append("调度失败：").append("执行器地址为空");
         }
@@ -191,9 +192,15 @@ public class XxlJobTrigger {
      */
     public static ReturnT<String> runExecutor(TriggerParam triggerParam, String address){
         ReturnT<String> runResult = null;
+
         try {
-            ExecutorBiz executorBiz = XxlJobDynamicScheduler.getExecutorBiz(address);
-            runResult = executorBiz.run(triggerParam);
+            
+            if(triggerParam.getGlueType().equals("BEAN_ClASS")){
+                
+            }else{
+                ExecutorBiz executorBiz = XxlJobDynamicScheduler.getExecutorBiz(address);
+                runResult = executorBiz.run(triggerParam);
+            }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             runResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
