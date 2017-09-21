@@ -1,6 +1,7 @@
 package com.xxl.job.admin.core.trigger;
 
 import com.xxl.job.admin.core.enums.ExecutorFailStrategyEnum;
+import com.xxl.job.admin.core.jobbean.LocalJobBean;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
@@ -142,7 +143,13 @@ public class XxlJobTrigger {
 
         // 3、trigger-valid
         
-        if (triggerResult.getCode()==ReturnT.SUCCESS_CODE && (jobInfo.getGlueType().equals("BEAN_ClASS") ? true : CollectionUtils.isEmpty(addressList))) {
+        if(jobInfo.getGlueType().equals("BEAN_ClASS")){
+            if(CollectionUtils.isEmpty(addressList)){
+                addressList.add("127.0.0.1");
+            }
+        }
+        
+        if (triggerResult.getCode()==ReturnT.SUCCESS_CODE &&CollectionUtils.isEmpty(addressList)) {
             triggerResult.setCode(ReturnT.FAIL_CODE);
             triggerMsgSb.append("<br>----------------------<br>").append("调度失败：").append("执行器地址为空");
         }
@@ -194,13 +201,19 @@ public class XxlJobTrigger {
         ReturnT<String> runResult = null;
 
         try {
-            
-            if(triggerParam.getGlueType().equals("BEAN_ClASS")){
-                
-            }else{
-                ExecutorBiz executorBiz = XxlJobDynamicScheduler.getExecutorBiz(address);
-                runResult = executorBiz.run(triggerParam);
-            }
+                if(triggerParam.getGlueType().equals("BEAN_ClASS")){
+                    
+                    String param = triggerParam.getExecutorParams();
+                    String className = "com.xxl.job.admin.jobs.Test";//triggerParam.
+                    LocalJobBean local = new LocalJobBean();
+                    local.setExecuteParm(param);
+                    local.setJobClass(className);
+                    runResult = local.run();
+                    
+                }else{
+                    ExecutorBiz executorBiz = XxlJobDynamicScheduler.getExecutorBiz(address);
+                    runResult = executorBiz.run(triggerParam);
+                }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             runResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
