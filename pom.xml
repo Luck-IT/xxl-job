@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.xuxueli</groupId>
 	<artifactId>xxl-job</artifactId>
-	<version>1.9.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
 
 	<name>${project.artifactId}</name>
@@ -13,8 +13,7 @@
 	<modules>
 		<module>xxl-job-core</module>
 		<module>xxl-job-admin</module>
-		<module>xxl-job-executor-samples</module>
-    </modules>
+	</modules>
 
 	<properties>
 		<javax.servlet-api.version>3.0.1</javax.servlet-api.version>
@@ -43,7 +42,7 @@
 		<groovy-all.version>2.4.5</groovy-all.version>
 		<mail.version>1.4.6</mail.version>
 		<quartz.version>2.3.0</quartz.version>
-
+		<repository.url>http://172.31.3.195:8081/nexus</repository.url>
 		<spring-boot.version>1.5.6.RELEASE</spring-boot.version>
 	</properties>
 
@@ -136,33 +135,38 @@
 						</executions>
 					</plugin>
 					<!-- GPG -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.6</version>
 						<configuration>
 							<useAgent>false</useAgent>
 						</configuration>
-                        <executions>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
+						<executions>
+							<execution>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
 				</plugins>
 			</build>
+			<!-- 设定团队持续集成发布包服务器 -->
 			<distributionManagement>
-				<snapshotRepository>
-					<id>oss</id>
-					<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-				</snapshotRepository>
 				<repository>
-					<id>oss</id>
-					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+					<id>nexus</id> <!-- 与maven setting server id一致 -->
+					<name>Team Nexus Release Repository</name>
+					<url>${repository.url}/content/repositories/thirdparty</url>
 				</repository>
+				<snapshotRepository>
+					<id>nexus</id>
+					<name>Team Nexus Snapshot Repository</name>
+					<url>${repository.url}/content/repositories/snapshots</url>
+					<uniqueVersion>false</uniqueVersion>
+				</snapshotRepository>
+
 			</distributionManagement>
 		</profile>
 	</profiles>

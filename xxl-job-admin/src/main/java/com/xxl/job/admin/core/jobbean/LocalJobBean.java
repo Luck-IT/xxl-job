@@ -1,7 +1,11 @@
 package com.xxl.job.admin.core.jobbean;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
+import com.xxl.job.core.thread.JobThread;
 
 /**
  * 本地执行的Job类
@@ -10,6 +14,7 @@ import com.xxl.job.core.handler.IJobHandler;
  */
 public class LocalJobBean {
     
+    private static Logger logger = LoggerFactory.getLogger(LocalJobBean.class);
     /**
      * 执行Job的类
      */
@@ -33,7 +38,7 @@ public class LocalJobBean {
     }
     
     public ReturnT<String> run() throws Exception{
-        
+        //logger.
         Object object = jobClass.newInstance();
         IJobHandler job= (IJobHandler) object;
         return job.execute(this.executeParm);    
