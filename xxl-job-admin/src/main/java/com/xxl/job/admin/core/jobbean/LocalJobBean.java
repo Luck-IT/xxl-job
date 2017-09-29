@@ -35,7 +35,7 @@ public class LocalJobBean {
     }
     public void setExecuteParm(String executeParm) {
         this.executeParm = executeParm;
-    }
+    } 
     
     public ReturnT<String> run() throws Exception{
         //logger.
