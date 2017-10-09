@@ -142,12 +142,7 @@ public class XxlJobTrigger {
         triggerMsgSb.append("<br>路由策略：").append(executorRouteStrategyEnum.getTitle());
 
         // 3、trigger-valid
-        
-        if(jobInfo.getGlueType().equals("BEAN_ClASS")){
-            if(CollectionUtils.isEmpty(addressList)){
-                addressList.add("127.0.0.1");
-            }
-        }
+       
         
         if (triggerResult.getCode()==ReturnT.SUCCESS_CODE &&CollectionUtils.isEmpty(addressList)) {
             triggerResult.setCode(ReturnT.FAIL_CODE);

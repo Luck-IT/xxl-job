@@ -10,7 +10,7 @@ public enum GlueTypeEnum {
     GLUE_SHELL("GLUE模式(Shell)"),
     GLUE_PYTHON("GLUE模式(Python)"),
     GLUE_NODEJS("GLUE模式(Nodejs)"),
-    BEAN_ClASS("Class(*.class形式)");     //添加class文件的执行器
+    BEAN_CLASS("Class(*.class)");     //添加class文件的执行器
 
     private String desc;
     private GlueTypeEnum(String desc) {
