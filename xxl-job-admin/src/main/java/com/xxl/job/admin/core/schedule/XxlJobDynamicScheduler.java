@@ -52,7 +52,7 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
     }
     
     //local handle
-    public static int localGroupId;
+    private static int localGroupId;
     //本地执行器名称
     private static final String localAppName="local-group";
 
@@ -358,6 +358,10 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
         return result;
     }
     
+    public static int getLocalGroupId() {
+        return localGroupId;
+    }
+
     /**
      * 用于在初始化时，注册本地执行器
      */

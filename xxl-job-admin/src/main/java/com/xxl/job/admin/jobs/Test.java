@@ -19,7 +19,7 @@ public class Test extends IJobHandler{
         System.out.println("jdfkljasjfsdjflka;sdf");
         System.out.println("jdfkljasjfsdjflka;sdf");
         System.out.println("jdfkljasjfsdjflka;sdf");
-        return new ReturnT<String>();
+        return  ReturnT.SUCCESS;
     }
 
 }

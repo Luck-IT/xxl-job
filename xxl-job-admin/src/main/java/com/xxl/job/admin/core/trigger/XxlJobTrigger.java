@@ -196,7 +196,7 @@ public class XxlJobTrigger {
         ReturnT<String> runResult = null;
 
         try {
-                if(triggerParam.getGlueType().equals("BEAN_ClASS")){
+                if(triggerParam.getGlueType().equals("BEAN_CLASS")){
                     
                     String param = triggerParam.getExecutorParams();
                     String className = "com.xxl.job.admin.jobs.Test";//triggerParam.
