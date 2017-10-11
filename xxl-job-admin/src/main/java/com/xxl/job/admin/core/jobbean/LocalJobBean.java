@@ -1,5 +1,7 @@
 package com.xxl.job.admin.core.jobbean;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,13 +17,28 @@ import com.xxl.job.core.thread.JobThread;
 public class LocalJobBean {
     
     private static Logger logger = LoggerFactory.getLogger(LocalJobBean.class);
+    
     /**
-     * 执行Job的类
+     * 存储任务执行器
      */
+    private static ConcurrentHashMap<String,IJobHandler> executorRepository = new ConcurrentHashMap<String,IJobHandler>();
+    
+    
+    public static IJobHandler getJobHandler(String name) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+        if(executorRepository.contains(name)) {
+            return executorRepository.get(name);
+        }else {
+            Class<?> jobClass = Class.forName(name);
+            IJobHandler handler = (IJobHandler)jobClass.newInstance();
+            executorRepository.put(name,handler);
+            return handler;
+        }
+    }
+    
+    
+/* 
     private Class<?> jobClass;
-    /**
-     * 执行参数
-     */
+
     private String executeParm;
     
     public Class<?> getJobClass() {
@@ -42,6 +59,6 @@ public class LocalJobBean {
         Object object = jobClass.newInstance();
         IJobHandler job= (IJobHandler) object;
         return job.execute(this.executeParm);    
-    }
+    }*/
     
 }

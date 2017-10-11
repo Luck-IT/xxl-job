@@ -12,6 +12,8 @@ import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
+import com.xxl.job.core.handler.IJobHandler;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -199,12 +201,9 @@ public class XxlJobTrigger {
                 if(triggerParam.getGlueType().equals("BEAN_CLASS")){
                     
                     String param = triggerParam.getExecutorParams();
-                    String className = "com.xxl.job.admin.jobs.Test";//triggerParam.
-                    LocalJobBean local = new LocalJobBean();
-                    local.setExecuteParm(param);
-                    local.setJobClass(className);
-                    runResult = local.run();
-                    
+                    String className = triggerParam.getExecutorHandler();
+                    IJobHandler handler = LocalJobBean.getJobHandler(className);
+                    runResult = handler.execute(param);   
                 }else{
                     ExecutorBiz executorBiz = XxlJobDynamicScheduler.getExecutorBiz(address);
                     runResult = executorBiz.run(triggerParam);
