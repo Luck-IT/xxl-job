@@ -28,37 +28,12 @@ public class LocalJobBean {
         if(executorRepository.contains(name)) {
             return executorRepository.get(name);
         }else {
+            //Class<?> jobClass = Class.forName(name,true,ClassLoader.getSystemClassLoader());
             Class<?> jobClass = Class.forName(name);
             IJobHandler handler = (IJobHandler)jobClass.newInstance();
             executorRepository.put(name,handler);
             return handler;
         }
     }
-    
-    
-/* 
-    private Class<?> jobClass;
-
-    private String executeParm;
-    
-    public Class<?> getJobClass() {
-        return jobClass;
-    }
-    public void setJobClass(String jobClass) throws ClassNotFoundException {
-        this.jobClass = Class.forName(jobClass);
-    }
-    public String getExecuteParm() {
-        return executeParm;
-    }
-    public void setExecuteParm(String executeParm) {
-        this.executeParm = executeParm;
-    } 
-    
-    public ReturnT<String> run() throws Exception{
-        //logger.
-        Object object = jobClass.newInstance();
-        IJobHandler job= (IJobHandler) object;
-        return job.execute(this.executeParm);    
-    }*/
     
 }
