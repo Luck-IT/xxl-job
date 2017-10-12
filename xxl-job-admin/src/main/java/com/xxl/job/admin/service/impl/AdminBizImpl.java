@@ -1,6 +1,5 @@
 package com.xxl.job.admin.service.impl;
 
-import com.xxl.job.admin.controller.JobApiController;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
