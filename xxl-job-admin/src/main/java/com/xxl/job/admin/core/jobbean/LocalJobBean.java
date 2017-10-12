@@ -1,5 +1,7 @@
 package com.xxl.job.admin.core.jobbean;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,33 +17,23 @@ import com.xxl.job.core.thread.JobThread;
 public class LocalJobBean {
     
     private static Logger logger = LoggerFactory.getLogger(LocalJobBean.class);
-    /**
-     * 执行Job的类
-     */
-    private Class<?> jobClass;
-    /**
-     * 执行参数
-     */
-    private String executeParm;
     
-    public Class<?> getJobClass() {
-        return jobClass;
-    }
-    public void setJobClass(String jobClass) throws ClassNotFoundException {
-        this.jobClass = Class.forName(jobClass);
-    }
-    public String getExecuteParm() {
-        return executeParm;
-    }
-    public void setExecuteParm(String executeParm) {
-        this.executeParm = executeParm;
-    }
+    /**
+     * 存储任务执行器
+     */
+    private static ConcurrentHashMap<String,IJobHandler> executorRepository = new ConcurrentHashMap<String,IJobHandler>();
     
-    public ReturnT<String> run() throws Exception{
-        //logger.
-        Object object = jobClass.newInstance();
-        IJobHandler job= (IJobHandler) object;
-        return job.execute(this.executeParm);    
+    
+    public static IJobHandler getJobHandler(String name) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+        if(executorRepository.contains(name)) {
+            return executorRepository.get(name);
+        }else {
+            //Class<?> jobClass = Class.forName(name,true,ClassLoader.getSystemClassLoader());
+            Class<?> jobClass = Class.forName(name);
+            IJobHandler handler = (IJobHandler)jobClass.newInstance();
+            executorRepository.put(name,handler);
+            return handler;
+        }
     }
     
 }

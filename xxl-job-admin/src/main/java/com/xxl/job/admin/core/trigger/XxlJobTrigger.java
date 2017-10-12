@@ -12,6 +12,8 @@ import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
+import com.xxl.job.core.handler.IJobHandler;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,12 +144,7 @@ public class XxlJobTrigger {
         triggerMsgSb.append("<br>路由策略：").append(executorRouteStrategyEnum.getTitle());
 
         // 3、trigger-valid
-        
-        if(jobInfo.getGlueType().equals("BEAN_ClASS")){
-            if(CollectionUtils.isEmpty(addressList)){
-                addressList.add("127.0.0.1");
-            }
-        }
+       
         
         if (triggerResult.getCode()==ReturnT.SUCCESS_CODE &&CollectionUtils.isEmpty(addressList)) {
             triggerResult.setCode(ReturnT.FAIL_CODE);
@@ -201,15 +198,12 @@ public class XxlJobTrigger {
         ReturnT<String> runResult = null;
 
         try {
-                if(triggerParam.getGlueType().equals("BEAN_ClASS")){
+                if(triggerParam.getGlueType().equals("BEAN_CLASS")){
                     
                     String param = triggerParam.getExecutorParams();
-                    String className = "com.xxl.job.admin.jobs.Test";//triggerParam.
-                    LocalJobBean local = new LocalJobBean();
-                    local.setExecuteParm(param);
-                    local.setJobClass(className);
-                    runResult = local.run();
-                    
+                    String className = triggerParam.getExecutorHandler();
+                    IJobHandler handler = LocalJobBean.getJobHandler(className);
+                    runResult = handler.execute(param);   
                 }else{
                     ExecutorBiz executorBiz = XxlJobDynamicScheduler.getExecutorBiz(address);
                     runResult = executorBiz.run(triggerParam);

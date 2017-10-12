@@ -1,6 +1,7 @@
 package com.xxl.job.admin.core.schedule;
 
 import com.xxl.job.admin.core.jobbean.RemoteHttpJobBean;
+import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.thread.JobFailMonitorHelper;
 import com.xxl.job.admin.core.thread.JobRegistryMonitorHelper;
@@ -12,6 +13,8 @@ import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.rpc.netcom.NetComClientProxy;
 import com.xxl.job.core.rpc.netcom.NetComServerFactory;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.quartz.*;
 import org.quartz.Trigger.TriggerState;
 import org.quartz.impl.triggers.CronTriggerImpl;
@@ -24,6 +27,7 @@ import org.springframework.util.Assert;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -46,6 +50,11 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }
+    
+    //local handle
+    private static int localGroupId;
+    //本地执行器名称
+    private static final String localAppName="local-group";
 
     // dao
     public static XxlJobLogDao xxlJobLogDao;
@@ -75,6 +84,9 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
         // admin-server(spring-mvc)
         NetComServerFactory.putService(AdminBiz.class, XxlJobDynamicScheduler.adminBiz);
         NetComServerFactory.setAccessToken(accessToken);
+        
+        //regist local handle group
+        registLocalHandle();
 
         // valid
         Assert.notNull(scheduler, "quartz scheduler is null");
@@ -345,42 +357,31 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
         }
         return result;
     }
+    
+    public static int getLocalGroupId() {
+        return localGroupId;
+    }
 
     /**
-     * finaAllJobList
-     *
-     * @return
-     *//*
-    @Deprecated
-    public static List<Map<String, Object>> finaAllJobList(){
-        List<Map<String, Object>> jobList = new ArrayList<Map<String,Object>>();
-
-        try {
-            if (scheduler.getJobGroupNames()==null || scheduler.getJobGroupNames().size()==0) {
-                return null;
-            }
-            String groupName = scheduler.getJobGroupNames().get(0);
-            Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName));
-            if (jobKeys!=null && jobKeys.size()>0) {
-                for (JobKey jobKey : jobKeys) {
-                    TriggerKey triggerKey = TriggerKey.triggerKey(jobKey.getName(), Scheduler.DEFAULT_GROUP);
-                    Trigger trigger = scheduler.getTrigger(triggerKey);
-                    JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-                    TriggerState triggerState = scheduler.getTriggerState(triggerKey);
-                    Map<String, Object> jobMap = new HashMap<String, Object>();
-                    jobMap.put("TriggerKey", triggerKey);
-                    jobMap.put("Trigger", trigger);
-                    jobMap.put("JobDetail", jobDetail);
-                    jobMap.put("TriggerState", triggerState);
-                    jobList.add(jobMap);
-                }
-            }
-
-        } catch (SchedulerException e) {
-            logger.error(e.getMessage(), e);
-            return null;
-        }
-        return jobList;
-    }*/
-
+     * 用于在初始化时，注册本地执行器
+     */
+    protected void registLocalHandle() {
+        
+       List<XxlJobGroup> groups = xxlJobGroupDao.findAll();
+       if(!CollectionUtils.isEmpty(groups)){
+           for(XxlJobGroup group:groups) {
+               if(group.getAppName().equals(localAppName)) {
+                   localGroupId = group.getId();
+                   return;
+               }
+           }
+       }
+       XxlJobGroup temp = new XxlJobGroup();
+       temp.setAddressList("127.0.0.1");
+       temp.setAddressType(1);
+       temp.setAppName(localAppName);
+       temp.setOrder(1);
+       temp.setTitle("本地执行器");
+       localGroupId = xxlJobGroupDao.save(temp);
+    }
 }
