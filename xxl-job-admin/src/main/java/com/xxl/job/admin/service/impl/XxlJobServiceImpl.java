@@ -68,13 +68,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 	@Override
 	public ReturnT<String> add(XxlJobInfo jobInfo) {
-		// valid
-	    
-	    //如果是本地*.class类型则需要预处理
-	    if(jobInfo.getGlueType().equals("BEAN_CLASS")) {
-	        preAdd(jobInfo);
-	    }
-	    
+		// valid	      
 		XxlJobGroup group = xxlJobGroupDao.load(jobInfo.getJobGroup());
 		if (group == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "请选择“执行器”");
@@ -366,15 +360,5 @@ public class XxlJobServiceImpl implements XxlJobService {
 		result.put("triggerCountSucTotal", triggerCountSucTotal);
 		result.put("triggerCountFailTotal", triggerCountFailTotal);
 		return new ReturnT<Map<String, Object>>(result);
-	}
-	
-	/**
-	 * 在正式添加任务前补充jobInfo，psdpdata项目
-	 * @param jobInfo
-	 */
-	protected void preAdd(XxlJobInfo jobInfo) {
-	    jobInfo.setJobGroup(XxlJobDynamicScheduler.getLocalGroupId());
-	    jobInfo.setExecutorBlockStrategy("SERIAL_EXECUTION");
-	    jobInfo.setExecutorRouteStrategy("FIRST");
 	}
 }
