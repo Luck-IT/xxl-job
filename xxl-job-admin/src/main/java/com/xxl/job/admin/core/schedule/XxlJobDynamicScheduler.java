@@ -377,11 +377,11 @@ public final class XxlJobDynamicScheduler implements ApplicationContextAware {
            }
        }
        XxlJobGroup temp = new XxlJobGroup();
-       temp.setAddressList("127.0.0.1");
-       temp.setAddressType(1);
+       //temp.setAddressList("127.0.0.1");
+       temp.setAddressType(0);//0：自动注册，1：手动注册
        temp.setAppName(localAppName);
        temp.setOrder(1);
-       temp.setTitle("本地执行器");
+       temp.setTitle("数据转换");
        localGroupId = xxlJobGroupDao.save(temp);
     }
 }

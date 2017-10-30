@@ -23,12 +23,18 @@ public class LocalJobBean {
      */
     private static ConcurrentHashMap<String,IJobHandler> executorRepository = new ConcurrentHashMap<String,IJobHandler>();
     
-    
+    /**
+     * 
+     * @param name ：执行器的全类型限定符
+     * @return
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     public static IJobHandler getJobHandler(String name) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        if(executorRepository.contains(name)) {
+        if(executorRepository.containsKey(name)) {
             return executorRepository.get(name);
         }else {
-            //Class<?> jobClass = Class.forName(name,true,ClassLoader.getSystemClassLoader());
             Class<?> jobClass = Class.forName(name);
             IJobHandler handler = (IJobHandler)jobClass.newInstance();
             executorRepository.put(name,handler);

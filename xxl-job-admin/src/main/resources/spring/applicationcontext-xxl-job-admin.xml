@@ -15,6 +15,7 @@
 				<value>classpath*:xxl-job-admin.properties</value>
 			</list>
 		</property>
+		<property name="ignoreUnresolvablePlaceholders" value="true"/>
 	</bean>
 
 	<!-- ********************************* part 1 :for datasource ********************************* -->

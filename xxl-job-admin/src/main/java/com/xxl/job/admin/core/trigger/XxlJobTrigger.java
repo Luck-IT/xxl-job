@@ -200,8 +200,8 @@ public class XxlJobTrigger {
         try {
                 if(triggerParam.getGlueType().equals("BEAN_CLASS")){
                     
-                    String param = triggerParam.getExecutorParams();
-                    String className = triggerParam.getExecutorHandler();
+                    String param = triggerParam.getExecutorHandler()+","+triggerParam.getExecutorParams();
+                    String className = triggerParam.getGlueSource();
                     IJobHandler handler = LocalJobBean.getJobHandler(className);
                     runResult = handler.execute(param);   
                 }else{
