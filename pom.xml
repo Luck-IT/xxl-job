@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+﻿<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.xuxueli</groupId>
@@ -19,12 +19,13 @@
 		<javax.servlet-api.version>3.0.1</javax.servlet-api.version>
 		<jsp-api.version>2.2</jsp-api.version>
 
-		<spring.version>3.2.18.RELEASE</spring.version>
+		<!-- <spring.version>3.2.18.RELEASE</spring.version> -->
+		<spring.version>4.3.10.RELEASE</spring.version>
 		<jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
 		<aspectjweaver.version>1.8.7</aspectjweaver.version>
 		<slf4j-api.version>1.7.25</slf4j-api.version>
 		<freemarker.version>2.3.20</freemarker.version>
-		<junit.version>4.11</junit.version>
+		<junit.version>4.12</junit.version>
 
 		<jetty-server.version>9.2.22.v20170606</jetty-server.version>
 		<hessian.version>4.0.38</hessian.version>

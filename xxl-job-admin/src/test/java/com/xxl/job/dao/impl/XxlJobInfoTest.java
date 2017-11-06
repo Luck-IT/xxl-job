@@ -1,24 +1,31 @@
 package com.xxl.job.dao.impl;
 
 import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:spring/applicationcontext-*.xml")
+@ContextConfiguration(locations = "classpath*:spring/applicationcontext-xxl-job-admin.xml")
 public class XxlJobInfoTest {
 	
 	@Resource
 	private XxlJobInfoDao xxlJobInfoDao;
 	
-	@Test
+/*	@Test
 	public void pageList(){
 		List<XxlJobInfo> list = xxlJobInfoDao.pageList(0, 20, 0, null);
 		int list_count = xxlJobInfoDao.pageListCount(0, 20, 0, null);
@@ -73,6 +80,23 @@ public class XxlJobInfoTest {
 
 		int ret3 = xxlJobInfoDao.findAllCount();
 
+	}*/
+    
+/*    private XxlJobDynamicScheduler dynamic;
+    @Before
+    public void set() {
+        ApplicationContext context = new ClassPathXmlApplicationContext("spring/applicationcontext-xxl-job-admin.xml");
+        dynamic = (XxlJobDynamicScheduler) context.getBean("xxlJobDynamicScheduler");
+    }*/
+	
+	@Test
+	public void loadbyAccessName() {
+	    List<String> names = new ArrayList<String>();
+	    names.add("test");
+	    names.add("test1");
+	    names.add("webService");
+	    List<XxlJobInfo> infos=xxlJobInfoDao.findByAccessName(names);
+	    System.out.println(infos.size());
 	}
 
 }
