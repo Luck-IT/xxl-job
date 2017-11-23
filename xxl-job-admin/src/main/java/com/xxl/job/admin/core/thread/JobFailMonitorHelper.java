@@ -45,9 +45,8 @@ public class JobFailMonitorHelper {
 							if (log!=null) {
 								if (ReturnT.SUCCESS_CODE==log.getTriggerCode() && log.getHandleCode()==0) {
 									// job running, wait + again monitor
-								    //TODO:正式环境中取消下面注释
-									//TimeUnit.SECONDS.sleep(10);
-								    TimeUnit.SECONDS.sleep(60);//默认为了调试方便，暂时延长时间为1分钟
+									TimeUnit.SECONDS.sleep(10);
+								    //TimeUnit.SECONDS.sleep(60);//默认为了调试方便，暂时延长时间为1分钟
 									JobFailMonitorHelper.monitor(jobLogId);
 									logger.info(">>>>>>>>>>> job monitor, job running, JobLogId:{}", jobLogId);
 								}
